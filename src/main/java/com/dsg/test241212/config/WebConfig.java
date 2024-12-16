@@ -8,14 +8,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${app.aws.ec2.instance-id}")
-    private String instanceId;
+    @Value("${app.aws.ec2.instance-front-url}")
+    private String frontInstanceURL;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
 
         registry.addMapping("/**")
-                .allowedOrigins(instanceId + ":3000")   // 모든 도메인에 대해 허용
+                .allowedOrigins(frontInstanceURL)   // 모든 도메인에 대해 허용
                 .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .maxAge(300)    // 300초 동안 캐싱
                 .allowedHeaders("Authorization", "Cache-Control", "Content-Type");
