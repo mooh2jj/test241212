@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
 
         registry.addMapping("/**")
-                .allowedOrigins("*")
+                .allowedOrigins("http://54.180.226.95:3000")   // 모든 도메인에 대해 허용
                 .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .maxAge(300)    // 300초 동안 캐싱
                 .allowedHeaders("Authorization", "Cache-Control", "Content-Type");
