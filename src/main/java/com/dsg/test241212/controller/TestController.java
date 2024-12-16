@@ -12,11 +12,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/test")
 public class TestController {
 
     private final TestRepository testRepository;
 
-    @GetMapping("/test")
+    @GetMapping("/list")
     public List<TestDTO> test() {
         return testRepository.findAll().stream()
                 .map(test -> TestDTO.builder()
