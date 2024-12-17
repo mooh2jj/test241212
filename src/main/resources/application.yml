@@ -24,7 +24,7 @@ spring:
 app:
   aws:
     ec2:
-        instance-front-url: ${AWS_EC2_INSTANCE_FRONT_URL:default}
+        instance-front-url: ${AWS_EC2_INSTANCE_FRONT_URL}
 
 
 logging:
