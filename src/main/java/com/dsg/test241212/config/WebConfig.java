@@ -17,6 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(frontInstanceURL)   // 모든 도메인에 대해 허용
                 .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowCredentials(true)
                 .maxAge(300)    // 300초 동안 캐싱
                 .allowedHeaders("Authorization", "Cache-Control", "Content-Type");
     }
