@@ -1,10 +1,18 @@
 server:
   port: 8080
 
-
 spring:
   config:
     import: optional:file:.env[.properties] # .env 파일 로드
+
+  profiles:
+    active: local # 기본 활성화 프로파일 설정
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -14,7 +22,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update # 테이블 생성 및 업데이트 전략 (create, create-drop, update, validate, none)
+      ddl-auto: update # 테이블 생성 및 업데이트 전략
     properties:
       hibernate:
         format_sql: true # SQL 포맷팅
@@ -24,15 +32,36 @@ spring:
 app:
   aws:
     ec2:
-        instance-front-url: ${AWS_EC2_INSTANCE_FRONT_URL}
+      instance-front-url: http://localhost:3000
 
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: validate # 테이블 검증 전략
+    properties:
+      hibernate:
+        format_sql: false # SQL 포맷팅 비활성화
+        highlight_sql: false # 하이라이트 SQL 출력 비활성화
+        use_sql_comments: false # JPQL SQL 주석 비활성화
+
+app:
+  aws:
+    ec2:
+      instance-front-url: http://43.203.42.37
 
 logging:
   level:
-#    org.springframework.security.web: trace
     org.hibernate.SQL: debug # Hibernate의 SQL을 출력
     org.hibernate.orm.jdbc.bind: trace # Hibernate의 SQL 바인딩을 출력
     org.springframework.transaction.interceptor: trace # Hibernate의 SQL 바인딩을 출력
-
-
-
