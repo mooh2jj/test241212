@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      REPOSITORY_NAME: instagram-server
+      REPOSITORY_NAME: test241212
 
     steps:
       - name: Github Repository 파일 불러오기
