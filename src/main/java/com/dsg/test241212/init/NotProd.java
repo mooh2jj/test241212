@@ -14,7 +14,7 @@ import java.util.stream.LongStream;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-@Profile("!prod")
+//@Profile("!prod")
 public class NotProd {
 
     private final TestRepository testRepository;

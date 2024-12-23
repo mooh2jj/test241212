@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  my-db:
+  db:
     image: mysql
     restart: unless-stopped
     environment:
@@ -23,7 +23,7 @@ services:
     networks:
       - test_network
 
-  my-server:
+  backend:
     restart: on-failure
     # .env 파일을 로드하여 환경변수를 설정
     env_file:
@@ -34,8 +34,20 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - my-db
+      - db
 #    condition: service_healthy
+    networks:
+      - test_network
+
+  frontend:
+    restart: on-failure
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+        - backend
     networks:
       - test_network
 networks:
