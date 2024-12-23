@@ -1,4 +1,4 @@
-name: Deploy To EC2
+name: Deploy To EC2 docker-compose
 
 on:
   push:
@@ -15,49 +15,16 @@ jobs:
       - name: Github Repository 파일 불러오기
         uses: actions/checkout@v4
 
-      - name: JDK 17버전 설치
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-
-      #      - name: application.yml 파일 만들기
-      #        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.yml
-
-      - name: 테스트 및 빌드하기
-        run: |
-          chmod +x gradlew
-          ./gradlew clean build
-
-      - name: AWS Resource에 접근할 수 있게 AWS credentials 설정
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: ap-northeast-2
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-      - name: ECR에 로그인하기
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Docker 이미지 생성
-        run: docker build -t ${{ env.REPOSITORY_NAME }} .
-
-      - name: Docker 이미지에 Tag 붙이기
-        run: docker tag ${{ env.REPOSITORY_NAME }} ${{ steps.login-ecr.outputs.registry }}/${{ env.REPOSITORY_NAME }}:latest
-
-      - name: ECR에 Docker 이미지 Push하기
-        run: docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.REPOSITORY_NAME }}:latest
-
       - name: SSH로 EC2에 접속하기
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
-            docker stop ${{ env.REPOSITORY_NAME }} || true
-            docker rm ${{ env.REPOSITORY_NAME }} || true
-            docker pull ${{ steps.login-ecr.outputs.registry }}/${{ env.REPOSITORY_NAME }}:latest
-            docker run -d --name ${{ env.REPOSITORY_NAME }} -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/${{ env.REPOSITORY_NAME }}:latest
+            cd /home/ubuntu/${{ env.REPOSITORY_NAME }}
+            sudo git pull origin main
+            sudo docker-compose down
+            sudo docker-compose up -d --build
+            
